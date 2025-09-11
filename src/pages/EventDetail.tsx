@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 
@@ -35,6 +36,8 @@ const EventDetail = () => {
   const [event, setEvent] = useState<EventItem | null>(null)
   const [notFound, setNotFound] = useState(false)
   const [all, setAll] = useState<EventItem[]>([])
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
+  // No orientation boxes needed when using masonry layout
 
   const fetchData = async () => {
     try {
@@ -90,7 +93,15 @@ const EventDetail = () => {
 
         <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
           {event.image && (
-            <div className="h-56 md:h-72 w-full bg-center bg-cover" style={{ backgroundImage: `url("${event.image}")` }} />
+            <div className="w-full bg-black/20 flex items-center justify-center p-2">
+              <img
+                src={(() => { const src = event.image as string; return (src.startsWith('http://') || src.startsWith('https://')) ? src : encodeURI(src) })()}
+                alt={event.title}
+                className="max-h-[60vh] w-auto object-contain rounded-md cursor-zoom-in"
+                loading="lazy"
+                onClick={() => { const src = event.image as string; setLightboxSrc((src.startsWith('http://') || src.startsWith('https://')) ? src : encodeURI(src)) }}
+              />
+            </div>
           )}
           <div className="p-6 md:p-8">
             <div className="text-sm text-[#00d4ff] mb-2">{event.date}{event.time ? ` • ${event.time}` : ''}{event.location ? ` • ${event.location}` : ''}</div>
@@ -147,10 +158,21 @@ const EventDetail = () => {
             {event.photos && event.photos.length > 0 && (
               <div className="mt-8">
                 <h2 className="text-white text-xl font-semibold mb-3">Photos</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="columns-1 sm:columns-2 md:columns-3 gap-4 [column-gap:1rem]">
                   {event.photos.map((p, i) => (
-                    <div key={i} className="aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-white/5">
-                      <img src={p} alt={`${event.title} photo ${i+1}`} className="h-full w-full object-cover" />
+                    <div key={i} className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-black/20">
+                      <img
+                        src={(p.startsWith('http://') || p.startsWith('https://')) ? p : encodeURI(p)}
+                        alt={`${event.title} photo ${i+1}`}
+                        className="w-full h-auto object-contain cursor-zoom-in"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget as HTMLImageElement
+                          target.onerror = null
+                          target.src = 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1200&auto=format&fit=crop'
+                        }}
+                        onClick={() => setLightboxSrc((p.startsWith('http://') || p.startsWith('https://')) ? p : encodeURI(p))}
+                      />
                     </div>
                   ))}
                 </div>
@@ -238,6 +260,17 @@ const EventDetail = () => {
           </div>
         )}
       </div>
+
+      {lightboxSrc && (
+        <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setLightboxSrc(null)}>
+          <div className="max-w-6xl w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-end mb-2">
+              <button className="px-3 py-2 rounded-md bg-white/10 border border-white/10 text-white hover:bg-white/15" onClick={() => setLightboxSrc(null)}>Close</button>
+            </div>
+            <img src={lightboxSrc} alt="Event photo" className="w-full h-auto rounded-xl" />
+          </div>
+        </div>
+      )}
     </section>
   )
 }
