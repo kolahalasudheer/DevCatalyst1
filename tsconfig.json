@@ -15,7 +15,11 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["vite/client", "react", "react-dom"],
     "typeRoots": ["./src/types", "./node_modules/@types"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "react": ["src/types/shims-react.d.ts"],
+      "react-router-dom": ["src/types/shims-react-router-dom.d.ts"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "src/types"]
 }

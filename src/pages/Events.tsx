@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 type Category = 'Hackathons' | 'Workshops' | 'Tech Talks' | 'Seminars' | 'Other';
 
@@ -16,7 +16,7 @@ type EventItem = {
   agenda?: AgendaItem[];
 };
 
-const Card = ({ item }: { item: EventItem }) => (
+const Card: React.FC<{ item: EventItem }> = ({ item }) => (
   <div className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2">
     <div className="absolute top-0 -left-full w-full h-[2px] bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] transition-all duration-500 group-hover:left-0"></div>
     <div className="h-40 md:h-48 w-full overflow-hidden">
@@ -63,8 +63,6 @@ const Card = ({ item }: { item: EventItem }) => (
     </div>
   </div>
 );
-
-import { useEffect, useMemo, useState } from 'react'
 
 type EventsData = { upcoming: EventItem[]; past: EventItem[] }
 
@@ -119,15 +117,15 @@ const Events = () => {
 
         <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">Upcoming Events</h2>
         <div className="grid md:grid-cols-2 gap-8 mb-14">
-          {data.upcoming.filter(filterMatches).map((e, i) => (
-            <Card key={i} item={e} />
+          {data.upcoming.filter(filterMatches).map((e: EventItem, i: number) => (
+            <Card key={e.slug || i} item={e} />
           ))}
         </div>
 
         <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">Past Events</h2>
         <div className="grid md:grid-cols-2 gap-8">
-          {data.past.filter(filterMatches).map((e, i) => (
-            <Card key={i} item={e} />
+          {data.past.filter(filterMatches).map((e: EventItem, i: number) => (
+            <Card key={e.slug || i} item={e} />
           ))}
         </div>
       </div>
