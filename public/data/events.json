@@ -1,0 +1,147 @@
+{
+  "upcoming": [
+    {
+      "slug": "react-workshop-2025",
+      "title": "React.js Workshop",
+      "date": "2025-12-15",
+      "time": "09:00 AM - 1:00 PM",
+      "location": "KV Seminar Hall, Matrusri Engineering College, Hyderabad",
+      "description": "Learn the fundamentals of React.js and build your first interactive web application. Perfect for beginners!",
+      "cta": "Register",
+      "image": "/events/web-workshop.svg",
+      "category": "Workshops",
+      "rules": [
+        "Bring your laptop and charger",
+        "Install Node.js LTS beforehand",
+        "Follow the code of conduct"
+      ],
+      "agenda": [
+        { "time": "09:00 AM", "item": "Registration & Setup" },
+        { "time": "09:30 AM", "item": "Intro to React & JSX" },
+        { "time": "10:30 AM", "item": "Components, Props, and State" },
+        { "time": "11:30 AM", "item": "Hands-on: Build a Todo App" },
+        { "time": "12:45 PM", "item": "Q&A and Next Steps" }
+      ],
+      "registrationUrl": "https://example.com/register/react-workshop"
+    },
+    {
+      "slug": "winter-hackathon-2025",
+      "title": "Winter Hackathon 2025",
+      "date": "2025-12-20",
+      "time": "48 Hours",
+      "location": "Campus Innovation Lab",
+      "description": "48-hour coding marathon! Team up with fellow developers and build innovative solutions for real-world problems.",
+      "cta": "Join",
+      "image": "/events/hackathon-2025.svg",
+      "category": "Hackathons",
+      "rules": [
+        "Teams of up to 4 members",
+        "All work must be done during the hackathon",
+        "Use of open-source libraries is allowed",
+        "Respect venue rules and code of conduct"
+      ],
+      "agenda": [
+        { "time": "10:00 AM", "item": "Kickoff & Problem Statements" },
+        { "time": "01:00 PM", "item": "Mentor Rounds" },
+        { "time": "Next Day 03:00 PM", "item": "Project Submissions" },
+        { "time": "05:00 PM", "item": "Demos & Judging" },
+        { "time": "07:00 PM", "item": "Results & Closing" }
+      ],
+      "registrationUrl": "https://example.com/register/winter-hackathon-2025"
+    }
+  ],
+  "past": [
+    {
+      "slug": "algorand-builders-workshop",
+      "title": "Algorand Builders Workshop",
+      "date": "2025-08-22",
+      "time": "10:00 AM - 4:00 PM",
+      "location": "KV Seminar Hall, Matrusri Engineering College, Hyderabad",
+      "description": "Hands-on workshop on Web3 and Algorand smart contracts in Python and TypeScript, hosted with Rise In and Algorand Foundation.",
+      "cta": "View Recap",
+      "image": "/gallery/2025-workshop-1.svg",
+      "category": "Workshops",
+      "summary": "The workshop introduced Web3 fundamentals, Algorand ecosystem, and smart contracts. Participants built and deployed a simple smart contract, explored real-world use cases, and connected with mentors for career pathways.",
+      "guests": [
+        { "name": "Mr. Srujan Vuyyuru", "designation": "Associate Developer, Rise In" }
+      ],
+      "highlights": [
+        "From Web1 → Web2 → Web3: evolution and impact",
+        "Smart contracts and transparency on Algorand",
+        "Hands-on activity: first Algorand smart contract",
+        "Q&A on careers, freelancing, and certifications"
+      ],
+      "photos": [
+        "/gallery/2025-workshop-1.svg",
+        "/gallery/2025-talk-1.svg",
+        "/gallery/2025-hackathon-1.svg",
+        "/gallery/2025-workshop-1.svg",
+        "/gallery/2025-talk-1.svg",
+        "/gallery/2025-hackathon-1.svg"
+      ],
+      "organizers": [
+        "DevCatalyst Core Team",
+        "Event Volunteers"
+      ],
+      "sponsors": [
+        "Algorand Foundation",
+        "Rise In",
+        "PatikaDev"
+      ],
+      "resources": [
+        { "label": "Slides: Intro to Web3 & Algorand", "url": "https://example.com/resources/algorand-slides" },
+        { "label": "Starter Repo", "url": "https://example.com/resources/algorand-starter" }
+      ],
+      "outcomes": [
+        "80+ attendees completed the hands-on",
+        "40+ students created Algorand wallets",
+        "10 teams formed for follow-up projects"
+      ],
+      "hashtags": ["#DevCatalyst", "#Algorand", "#Web3", "#Hyderabad", "#Workshop"]
+    },
+    {
+      "slug": "club-inauguration-2025",
+      "title": "Dev Catalyst Club Inauguration",
+      "date": "2025-08-18",
+      "time": "10:00 AM - 12:30 PM",
+      "location": "Auditorium, Matrusri Engineering College",
+      "description": "Official inauguration of the Dev Catalyst Club featuring talks by faculty and technical sessions by student leaders.",
+      "cta": "View Recap",
+      "image": "/gallery/2025-talk-1.svg",
+      "category": "Seminars",
+      "summary": "The club was officially launched with guidance from faculty and a vision talk by the leadership. Students got introduced to Git basics and building custom chatbots with Dify AI.",
+      "guests": [
+        { "name": "Dr. G. Amarendar Rao", "designation": "Principal" },
+        { "name": "Dr. T. Raghunadha Reddy", "designation": "HOD, CSE" },
+        { "name": "Dr. Indumathi Lakshmi Krishnan", "designation": "Faculty Coordinator" }
+      ],
+      "highlights": [
+        "Vision & mission of Dev Catalyst",
+        "Git Basics session",
+        "Dify AI workflow demo"
+      ],
+      "photos": [
+        "/gallery/2025-hackathon-1.svg",
+        "/gallery/2025-talk-1.svg",
+        "/gallery/2025-workshop-1.svg",
+        "/gallery/2025-hackathon-1.svg",
+        "/gallery/2025-talk-1.svg"
+      ],
+      "organizers": [
+        "DevCatalyst Leadership",
+        "Event Coordination Team"
+      ],
+      "sponsors": [
+        "MEC CSE Department"
+      ],
+      "resources": [
+        { "label": "Git Basics Slides", "url": "https://example.com/resources/git-basics" }
+      ],
+      "outcomes": [
+        "150+ students joined the club",
+        "Upcoming Algorand Workshop announced"
+      ],
+      "hashtags": ["#DevCatalyst", "#Inauguration", "#StudentClubs"]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "overview": "Dev Catalyst is a student-led developer community that helps students learn by building. We run workshops, hackathons, speaker sessions and mentorship programs across web, mobile, AI/ML and cloud.",
+  "domains": ["Web Development", "Mobile Apps", "AI/ML", "Cloud", "Cybersecurity", "Blockchain", "IoT", "Game Development"],
+  "leadership": [
+    { "name": "Alex Kumar", "role": "President", "avatar": "AK" },
+    { "name": "Sarah Patel", "role": "Vice President", "avatar": "SP" },
+    { "name": "Raj Joshi", "role": "Event Head", "avatar": "RJ" },
+    { "name": "Maya Gupta", "role": "Technical Lead", "avatar": "MG" }
+  ],
+  "teams": [
+    {
+      "name": "Web Team",
+      "members": [
+        { "name": "Neha Sharma", "role": "Frontend", "avatar": "NS" },
+        { "name": "Aarav Mehta", "role": "Backend", "avatar": "AM" }
+      ]
+    },
+    {
+      "name": "AI/ML Team",
+      "members": [
+        { "name": "Ishita Rao", "role": "ML Engineer", "avatar": "IR" },
+        { "name": "Karan Verma", "role": "Data Engineer", "avatar": "KV" }
+      ]
+    }
+  ]
+}
