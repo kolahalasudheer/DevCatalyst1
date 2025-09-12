@@ -13,7 +13,7 @@ type TeamData = {
 
 const About = () => {
   const [data, setData] = useState<TeamData | null>(null)
-  const [open, setOpen] = useState<Record<string, boolean>>({})
+  const [activeTeam, setActiveTeam] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -24,7 +24,7 @@ const About = () => {
     return () => { cancelled = true }
   }, [])
 
-  const toggleTeam = (name: string) => setOpen(prev => ({ ...prev, [name]: !prev[name] }))
+  const toggleTeam = (name: string) => setActiveTeam(prev => (prev === name ? null : name))
 
   return (
     <section id="about" className="py-20 px-4">
@@ -92,10 +92,10 @@ const About = () => {
                     <button onClick={() => toggleTeam(t.name)} className="w-full text-left">
                       <div className="flex items-center justify-between">
                         <div className="text-white font-semibold">{t.name}</div>
-                        <div className="text-[#00d4ff] text-sm">{open[t.name] ? 'Hide' : 'Show'}</div>
+                        <div className="text-[#00d4ff] text-sm">{activeTeam === t.name ? 'Hide' : 'Show'}</div>
                       </div>
                     </button>
-                    {open[t.name] && (
+                    {activeTeam === t.name && (
                       <ul className="mt-4 space-y-3">
                         {t.members.map((m, j) => (
                           <li key={j} className="flex items-center gap-3">

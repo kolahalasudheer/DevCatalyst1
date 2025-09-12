@@ -2,25 +2,37 @@
   "overview": "Dev Catalyst is a student-led developer community that helps students learn by building. We run workshops, hackathons, speaker sessions and mentorship programs across web, mobile, AI/ML and cloud.",
   "domains": ["Web Development", "Mobile Apps", "AI/ML", "Cloud", "Cybersecurity", "Blockchain", "IoT", "Game Development"],
   "leadership": [
-    { "name": "Alex Kumar", "role": "President", "avatar": "AK" },
-    { "name": "Sarah Patel", "role": "Vice President", "avatar": "SP" },
+    { "name": "Divyansh Teja", "role": "President", "avatar": "DT" },
+    { "name": "Dhruv", "role": "Vice President", "avatar": "DG" },
     { "name": "Raj Joshi", "role": "Event Head", "avatar": "RJ" },
     { "name": "Maya Gupta", "role": "Technical Lead", "avatar": "MG" }
   ],
   "teams": [
     {
-      "name": "Web Team",
+      "name": "Core Team",
+      "members": []
+    },
+    {
+      "name": "Technical Team",
       "members": [
-        { "name": "Neha Sharma", "role": "Frontend", "avatar": "NS" },
-        { "name": "Aarav Mehta", "role": "Backend", "avatar": "AM" }
+        { "name": "Sudheer" },
+        { "name": "Siddartha" },
+        { "name": "Dhruv" },
+        { "name": "Pranav" },
+        { "name": "Bavana" },
+        { "name": "Hasini" },
+        { "name": "Hemaditya" },
+        { "name": "Sanjay" },
+        { "name": "Srikar" }
       ]
     },
     {
-      "name": "AI/ML Team",
-      "members": [
-        { "name": "Ishita Rao", "role": "ML Engineer", "avatar": "IR" },
-        { "name": "Karan Verma", "role": "Data Engineer", "avatar": "KV" }
-      ]
+      "name": "Event Planning Team",
+      "members": []
+    },
+    {
+      "name": "Social Media Team",
+      "members": []
     }
   ]
 }

@@ -199,14 +199,23 @@ const Home = () => {
               </div>
             </div>
             
-            <a 
-              href="#about" 
-              className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white rounded-full font-semibold text-sm sm:text-base
-                transform hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,212,255,0.3)] animate-fadeInUp animation-delay-600
-                active:scale-95 touch-manipulation"
-            >
-              Explore Our Community
-            </a>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-fadeInUp animation-delay-600">
+              <a 
+                href="#about" 
+                className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white rounded-full font-semibold text-sm sm:text-base
+                  transform hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,212,255,0.3)]
+                  active:scale-95 touch-manipulation"
+              >
+                Explore Our Community
+              </a>
+              <a
+                href="#events"
+                className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base border border-white/15 text-white/90 hover:text-white
+                  hover:border-[#00d4ff]/50 hover:bg-white/5 transform hover:-translate-y-1 transition-all duration-300 active:scale-95"
+              >
+                See Upcoming Events
+              </a>
+            </div>
           </div>
         </section>
 
@@ -305,6 +314,122 @@ const Home = () => {
                   <li>Share knowledge and lift others up</li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Highlights / Recent Gallery */}
+        <section className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+              Recent Highlights
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { title: 'Hackathon 2025', img: '/gallery/2025-hackathon-1.svg', desc: '120+ participants, 24 projects shipped.' },
+                { title: 'Tech Talk', img: '/gallery/2025-talk-1.svg', desc: 'Guest session on AI agents and tooling.' },
+                { title: 'Web Workshop', img: '/gallery/2025-workshop-1.svg', desc: 'From idea to deploy with Vite + Tailwind.' },
+              ].map((g, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:-translate-y-2 transition-all">
+                  <img src={g.img} alt={g.title} loading="lazy" className="w-full h-48 object-cover bg-white/5" />
+                  <div className="p-6">
+                    <h3 className="text-white font-semibold mb-1">{g.title}</h3>
+                    <p className="text-gray-400 text-sm">{g.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <a href="/gallery" className="inline-block px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10">View Gallery</a>
+            </div>
+          </div>
+        </section>
+
+        {/* Teams Preview */}
+        <section className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+              Explore Our Teams
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { name: 'Core Team', href: '/about#teams' },
+                { name: 'Technical Team', href: '/about#teams' },
+                { name: 'Event Planning Team', href: '/about#teams' },
+                { name: 'Social Media Team', href: '/about#teams' },
+              ].map((t, i) => (
+                <a key={i} href={t.href} className="block bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:-translate-y-2 transition-all">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff]" />
+                  <div className="text-white font-semibold">{t.name}</div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Getting Started Steps */}
+        <section className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+              Get Started in 3 Steps
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { step: '01', title: 'Join the Community', desc: 'Hop into Discord/WhatsApp for updates and support.' },
+                { step: '02', title: 'Attend a Workshop', desc: 'Pick a beginner-friendly session this month.' },
+                { step: '03', title: 'Build a Project', desc: 'Team up and ship something real for your portfolio.' },
+              ].map((s, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-8 hover:-translate-y-2 transition-all">
+                  <div className="text-[#00d4ff] font-semibold mb-2">{s.step}</div>
+                  <h3 className="text-white text-lg font-semibold mb-2">{s.title}</h3>
+                  <p className="text-gray-400">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+              What Members Say
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { quote: 'Workshops are hands-on and super practical. I built my first app here!', name: 'Aisha' },
+                { quote: 'Great peer mentorship and friendly vibes. Helped me crack my internship.', name: 'Rahul' },
+                { quote: 'The hackathon was incredible—learned a ton and made new friends.', name: 'Sneha' },
+              ].map((q, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                  <p className="text-gray-300 leading-relaxed mb-4">“{q.quote}”</p>
+                  <div className="text-white font-semibold">{q.name}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Resources teaser */}
+        <section className="py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+              Popular Resources
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                { title: 'Frontend Roadmap', tag: 'Web' },
+                { title: 'Intro to LLMs', tag: 'AI/ML' },
+                { title: 'Deploy on Vercel', tag: 'Cloud' },
+              ].map((r, i) => (
+                <a key={i} href="/resources" className="block bg-white/5 border border-white/10 rounded-2xl p-6 hover:-translate-y-2 transition-all">
+                  <div className="text-[#00d4ff] text-sm mb-1">{r.tag}</div>
+                  <div className="text-white font-semibold">{r.title}</div>
+                </a>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <a href="/resources" className="inline-block px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10">Browse All Resources</a>
             </div>
           </div>
         </section>
