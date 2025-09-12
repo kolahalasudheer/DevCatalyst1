@@ -1,0 +1,15 @@
+{
+  "users": [
+    { "name": "Divyansh Teja", "role": "President", "points": 980, "tag": "All" },
+    { "name": "Dhruv", "role": "Vice President", "points": 860, "tag": "All" },
+    { "name": "Siddartha", "role": "Technical", "points": 740, "tag": "Hackathons" },
+    { "name": "Sudheer", "role": "Technical", "points": 720, "tag": "Open Source" },
+    { "name": "Pranav", "role": "Technical", "points": 660, "tag": "Month" },
+    { "name": "Bavana", "role": "Technical", "points": 640, "tag": "Month" },
+    { "name": "Hasini", "role": "Technical", "points": 610, "tag": "Open Source" },
+    { "name": "Sanjay", "role": "Technical", "points": 590, "tag": "Hackathons" },
+    { "name": "Srikar", "role": "Technical", "points": 560, "tag": "Open Source" }
+  ]
+}
+
+
