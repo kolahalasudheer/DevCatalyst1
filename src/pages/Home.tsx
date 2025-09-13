@@ -8,11 +8,74 @@ type Filter = 'All' | 'Month' | 'Hackathons' | 'Open Source'
 
 type BoardUser = { name: string; role: string; points: number; tag: Filter }
 
+type HighlightItem = {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  date: string;
+  category: 'event' | 'achievement' | 'announcement' | 'workshop';
+  link?: string;
+}
+
 const Home = () => {
   const [events, setEvents] = useState([] as UpcomingEvent[])
   const [activeEvent, setActiveEvent] = useState(null as ActiveEventState)
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 } as TimeLeft)
+  const [highlights, setHighlights] = useState([] as HighlightItem[])
+  const [currentHighlight, setCurrentHighlight] = useState(0)
   const canvasRef = useRef(null as HTMLCanvasElement | null)
+
+  // Sample highlights data - replace with your actual data source
+  const sampleHighlights: HighlightItem[] = [
+    {
+      id: 1,
+      title: "Winter Hackathon 2025 Success!",
+      description: "120+ participants built amazing projects over 48 hours. Congratulations to all winners!",
+      image: "/gallery/2025-hackathon-1.svg",
+      date: "Jan 15, 2025",
+      category: "event",
+      link: "/events/winter-hackathon-2025"
+    },
+    {
+      id: 2,
+      title: "New AI/ML Workshop Series",
+      description: "Join our comprehensive AI/ML bootcamp starting February. Limited seats available!",
+      image: "/gallery/2025-workshop-ai.svg",
+      date: "Jan 20, 2025",
+      category: "announcement",
+      link: "/events/ai-ml-bootcamp"
+    },
+    {
+      id: 3,
+      title: "Community Reaches 500+ Members",
+      description: "Dev Catalyst community has grown to over 500 active members across all platforms!",
+      image: "/gallery/community-milestone.svg",
+      date: "Jan 10, 2025",
+      category: "achievement"
+    },
+    {
+      id: 4,
+      title: "Guest Speaker: Industry Expert",
+      description: "Don't miss our upcoming tech talk with a senior engineer from a top tech company.",
+      image: "/gallery/tech-talk-guest.svg",
+      date: "Jan 25, 2025",
+      category: "workshop",
+      link: "/events/tech-talk-industry-expert"
+    }
+  ]
+
+  useEffect(() => {
+    // Set highlights data (in real app, fetch from API)
+    setHighlights(sampleHighlights)
+
+    // Auto-slide highlights every 5 seconds
+    const interval = setInterval(() => {
+      setCurrentHighlight((prev: number) => (prev + 1) % sampleHighlights.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     const parseStartTime = (time?: string): string | null => {
@@ -169,7 +232,7 @@ const Home = () => {
             if (dist < 160) {
               const alpha = 1 - dist / 160
               ctx.beginPath()
-              ctx.moveTo(pts[i].x, pts[i].y)
+              ctx.moveTo(pts[i].x, pts[j].y)
               ctx.lineTo(pts[j].x, pts[j].y)
               ctx.strokeStyle = `rgba(0,212,255,${0.08 + alpha * 0.12})`
               ctx.lineWidth = 1
@@ -231,9 +294,29 @@ const Home = () => {
     }
   }, [activeEvent])
 
+  const getCategoryIcon = (category: HighlightItem['category']) => {
+    switch (category) {
+      case 'event': return '🎉'
+      case 'achievement': return '🏆'
+      case 'announcement': return '📢'
+      case 'workshop': return '💡'
+      default: return '⭐'
+    }
+  }
+
+  const getCategoryColor = (category: HighlightItem['category']) => {
+    switch (category) {
+      case 'event': return 'from-green-500 to-emerald-600'
+      case 'achievement': return 'from-yellow-500 to-orange-600'
+      case 'announcement': return 'from-blue-500 to-cyan-600'
+      case 'workshop': return 'from-purple-500 to-pink-600'
+      default: return 'from-[#00d4ff] to-[#9c40ff]'
+    }
+  }
+
   return (
     <>
-      <main className="relative">
+      <main className="relative bg-[#0a0a0a]">
         <section id="home" className="hero-section min-h-[85vh] sm:min-h-screen flex items-center justify-center text-center relative bg-[#0a0a0a] overflow-hidden">
           <div className="hero-background absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,212,255,0.12)_0%,transparent_70%)]"></div>
@@ -245,7 +328,7 @@ const Home = () => {
           </div>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent mb-4 animate-fadeInUp">
-              Dev Catalyst
+              DevCatalyst
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-gray-400 mb-8 animate-fadeInUp animation-delay-200">
               Fueling the Next Generation of Developers
@@ -253,15 +336,15 @@ const Home = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-10 md:gap-16 mb-10 animate-fadeInUp animation-delay-400">
               <div className="text-center">
-                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="25">0</div>
+                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="500">0</div>
                 <div className="text-gray-500">Members</div>
               </div>
               <div className="text-center">
-                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="5">0</div>
+                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="15">0</div>
                 <div className="text-gray-500">Events</div>
               </div>
               <div className="text-center">
-                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="10">0</div>
+                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="25">0</div>
                 <div className="text-gray-500">Projects</div>
               </div>
             </div>
@@ -282,6 +365,137 @@ const Home = () => {
               >
                 See Upcoming Events
               </a>
+            </div>
+          </div>
+        </section>
+
+        {/* NEW HIGHLIGHTS SECTION */}
+        <section className="py-12 sm:py-16 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+                Community Highlights
+              </h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Stay updated with the latest events, achievements, and announcements from our growing developer community.
+              </p>
+            </div>
+
+            {/* Main Highlight Carousel */}
+            <div className="relative mb-12">
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden">
+                {highlights.length > 0 && (
+                  <div className="relative">
+                    {/* Main highlight content */}
+                    <div className="grid lg:grid-cols-2 gap-0">
+                      {/* Image section */}
+                      <div className="relative h-64 lg:h-80 overflow-hidden">
+                        <img 
+                          src={highlights[currentHighlight]?.image || '/placeholder.jpg'} 
+                          alt={highlights[currentHighlight]?.title}
+                          className="w-full h-full object-cover transition-all duration-700 transform hover:scale-105"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-4 left-4">
+                          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getCategoryColor(highlights[currentHighlight]?.category)} text-white shadow-lg`}>
+                            <span>{getCategoryIcon(highlights[currentHighlight]?.category)}</span>
+                            {highlights[currentHighlight]?.category.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Content section */}
+                      <div className="p-8 lg:p-12 flex flex-col justify-center">
+                        <div className="text-[#00d4ff] text-sm font-semibold mb-2">
+                          {highlights[currentHighlight]?.date}
+                        </div>
+                        <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight">
+                          {highlights[currentHighlight]?.title}
+                        </h3>
+                        <p className="text-gray-300 leading-relaxed mb-6 text-base lg:text-lg">
+                          {highlights[currentHighlight]?.description}
+                        </p>
+                        {highlights[currentHighlight]?.link && (
+                          <a 
+                            href={highlights[currentHighlight]?.link}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white rounded-full font-semibold hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,212,255,0.3)] w-fit"
+                          >
+                            Learn More
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Navigation arrows */}
+                    <button
+                      onClick={() => setCurrentHighlight((prev: number) => prev === 0 ? highlights.length - 1 : prev - 1)}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 backdrop-blur-sm border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-300 lg:w-12 lg:h-12"
+                      aria-label="Previous highlight"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setCurrentHighlight((prev: number) => (prev + 1) % highlights.length)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-black/50 backdrop-blur-sm border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-all duration-300 lg:w-12 lg:h-12"
+                      aria-label="Next highlight"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Dots indicator */}
+              <div className="flex justify-center gap-3 mt-6">
+              {highlights.map((_: HighlightItem, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentHighlight(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      index === currentHighlight 
+                        ? 'bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] scale-125' 
+                        : 'bg-white/20 hover:bg-white/40'
+                    }`}
+                    aria-label={`Go to highlight ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Quick highlights grid */}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {highlights.slice(0, 4).map((highlight: HighlightItem, index: number) => (
+                <div
+                  key={highlight.id}
+                  onClick={() => setCurrentHighlight(index)}
+                  className={`cursor-pointer bg-white/5 border border-white/10 rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#00d4ff]/30 ${
+                    index === currentHighlight ? 'ring-2 ring-[#00d4ff]/50 bg-white/10' : ''
+                  }`}
+                >
+                  <div className="aspect-video mb-3 rounded-lg overflow-hidden">
+                    <img 
+                      src={highlight.image} 
+                      alt={highlight.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs">{getCategoryIcon(highlight.category)}</span>
+                    <span className="text-[#00d4ff] text-xs font-semibold">{highlight.date}</span>
+                  </div>
+                  <h4 className="text-white font-semibold text-sm leading-tight line-clamp-2">
+                    {highlight.title}
+                  </h4>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -327,10 +541,10 @@ const Home = () => {
         <section id="about" className="py-10 sm:py-14 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-5 sm:mb-7 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
-              About Dev Catalyst
+              About DevCatalyst
             </h2>
             <p className="max-w-3xl mx-auto text-center text-gray-400 mb-7 sm:mb-9 leading-relaxed text-sm sm:text-base">
-              Dev Catalyst is a student-led developer community focused on learning-by-building. We bring together curious minds to explore modern technologies, collaborate on real projects, and become industry-ready through practice, mentorship, and events.
+              DevCatalyst is a student-led developer community focused on learning-by-building. We bring together curious minds to explore modern technologies, collaborate on real projects, and become industry-ready through practice, mentorship, and events.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30 hover:shadow-[0_20px_40px_rgba(0,212,255,0.1)]">
@@ -359,59 +573,6 @@ const Home = () => {
                   <li>Community projects with real users</li>
                 </ul>
               </div>
-
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30 hover:shadow-[0_20px_40px_rgba(0,212,255,0.1)]">
-                <h3 className="text-[#00d4ff] text-xl font-semibold mb-4">Who Can Join</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  Anyone interested in technology: developers, designers, product enthusiasts. No prior experience required—just curiosity and commitment.
-                </p>
-              </div>
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30 hover:shadow-[0_20px_40px_rgba(0,212,255,0.1)]">
-                <h3 className="text-[#00d4ff] text-xl font-semibold mb-4">How To Get Involved</h3>
-                <ul className="text-gray-400 leading-relaxed list-disc pl-5 space-y-2">
-                  <li>Attend a beginner workshop this month</li>
-                  <li>Join a project team that matches your interests</li>
-                  <li>Contribute to our open-source repos</li>
-                  <li>Volunteer at events or lead a session</li>
-                  <li>Say hello on our community chat</li>
-                </ul>
-              </div>
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30 hover:shadow-[0_20px_40px_rgba(0,212,255,0.1)]">
-                <h3 className="text-[#00d4ff] text-xl font-semibold mb-4">Our Values</h3>
-                <ul className="text-gray-400 leading-relaxed list-disc pl-5 space-y-2">
-                  <li>Learn in public and build together</li>
-                  <li>Be kind, inclusive, and respectful</li>
-                  <li>Bias for action—ship, iterate, improve</li>
-                  <li>Share knowledge and lift others up</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Highlights / Recent Gallery */}
-        <section className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
-              Recent Highlights
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { title: 'Hackathon 2025', img: '/gallery/2025-hackathon-1.svg', desc: '120+ participants, 24 projects shipped.' },
-                { title: 'Tech Talk', img: '/gallery/2025-talk-1.svg', desc: 'Guest session on AI agents and tooling.' },
-                { title: 'Web Workshop', img: '/gallery/2025-workshop-1.svg', desc: 'From idea to deploy with Vite + Tailwind.' },
-              ].map((g, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:-translate-y-2 transition-all">
-                  <img src={g.img} alt={g.title} loading="lazy" className="w-full h-48 object-cover bg-white/5" />
-                  <div className="p-6">
-                    <h3 className="text-white font-semibold mb-1">{g.title}</h3>
-                    <p className="text-gray-400 text-sm">{g.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="text-center mt-8">
-              <a href="/gallery" className="inline-block px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10">View Gallery</a>
             </div>
           </div>
         </section>
@@ -460,169 +621,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
-              What Members Say
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { quote: 'Workshops are hands-on and super practical. I built my first app here!', name: 'Aisha' },
-                { quote: 'Great peer mentorship and friendly vibes. Helped me crack my internship.', name: 'Rahul' },
-                { quote: 'The hackathon was incredible—learned a ton and made new friends.', name: 'Sneha' },
-              ].map((q, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6">
-                  <p className="text-gray-300 leading-relaxed mb-4">“{q.quote}”</p>
-                  <div className="text-white font-semibold">{q.name}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Resources teaser */}
-        <section className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
-              Popular Resources
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {[
-                { title: 'Frontend Roadmap', tag: 'Web' },
-                { title: 'Intro to LLMs', tag: 'AI/ML' },
-                { title: 'Deploy on Vercel', tag: 'Cloud' },
-              ].map((r, i) => (
-                <a key={i} href="/resources" className="block bg-white/5 border border-white/10 rounded-2xl p-6 hover:-translate-y-2 transition-all">
-                  <div className="text-[#00d4ff] text-sm mb-1">{r.tag}</div>
-                  <div className="text-white font-semibold">{r.title}</div>
-                </a>
-              ))}
-            </div>
-            <div className="text-center mt-8">
-              <a href="/resources" className="inline-block px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10">Browse All Resources</a>
-            </div>
-          </div>
-        </section>
-
-        {/* Leaderboard */}
-        <section className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">Leaderboard</h2>
-
-            {(() => {
-              const [filter, setFilter] = useState('All' as Filter)
-              const [data, setData] = useState([] as BoardUser[])
-
-              useEffect(() => {
-                let cancelled = false
-                fetch('/data/leaderboard.json', { cache: 'no-store' })
-                  .then(r => r.ok ? r.json() : Promise.reject(new Error('Failed')))
-                  .then(json => { if (!cancelled) setData(Array.isArray(json?.users) ? json.users as BoardUser[] : []) })
-                  .catch(() => { /* silently ignore */ })
-                return () => { cancelled = true }
-              }, [])
-
-              const filtered = data
-                .filter((u: BoardUser) => filter === 'All' ? true : u.tag === filter)
-                .sort((a: BoardUser, b: BoardUser) => b.points - a.points)
-              const podium = filtered.slice(0, 3)
-              const others = filtered.slice(3, 5)
-              const maxPts = Math.max(...filtered.map((u: BoardUser) => u.points), 1)
-
-              return (
-                <>
-                  <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8">
-                    {(['All','Month','Hackathons','Open Source'] as const).map((key: Filter) => (
-                      <button
-                        key={key}
-                        onClick={() => setFilter(key)}
-                        className={`px-4 py-2 rounded-full border text-sm transition-all ${filter === key ? 'bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white border-transparent' : 'bg-white/5 border-white/10 text-white/90 hover:bg-white/10'}`}
-                      >
-                        {key === 'All' ? 'All-time' : key === 'Month' ? 'This Month' : key}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Podium */}
-                  <div className="grid md:grid-cols-3 gap-5 mb-8">
-                    {podium.map((p: BoardUser, i: number) => (
-                      <div key={i} className={`relative bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:-translate-y-1 transition-all ${i===0 ? 'md:order-2' : i===1 ? 'md:order-1' : 'md:order-3'}`}>
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${i===0 ? 'bg-yellow-400 text-black' : i===1 ? 'bg-gray-300 text-black' : 'bg-amber-700 text-white'}`}>{i===0 ? '1st' : i===1 ? '2nd' : '3rd'}</span>
-                        </div>
-                        <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-lg font-bold text-white">
-                          {p.name.split(' ').map((w: string) => w[0]).slice(0,2).join('')}
-                        </div>
-                        <div className="text-white font-semibold">{p.name}</div>
-                        <div className="text-[#00d4ff] text-sm mb-2">{p.role}</div>
-                        <div className="text-gray-300 text-sm">{p.points} pts</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Ranked list */}
-                  <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
-                    <div className="divide-y divide-white/10">
-                      {others.map((u: BoardUser, idx: number) => (
-                        <div key={u.name} className="py-4 flex items-center gap-4">
-                          <div className="w-8 text-gray-400 text-sm">#{idx + 4}</div>
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-sm font-bold text-white">
-                            {u.name.split(' ').map((w: string) => w[0]).slice(0,2).join('')}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <div className="text-white font-medium leading-tight">{u.name}</div>
-                                <div className="text-[#00d4ff] text-xs">{u.role}</div>
-                              </div>
-                              <div className="text-gray-300 text-sm">{u.points} pts</div>
-                            </div>
-                            <div className="mt-2 h-2 w-full rounded-full bg-white/5 overflow-hidden">
-                              <div className="h-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff]" style={{ width: `${Math.max(6, Math.round((u.points / maxPts) * 100))}%` }} />
-                            </div>
-                          </div>
-                          <div>
-                            <span className="px-2 py-1 rounded-full text-xs bg-white/5 border border-white/10 text-gray-300">{u.tag}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )
-            })()}
-          </div>
-        </section>
-
-        {/* Community CTA */}
-        <section className="py-12 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div>
-                <h3 className="text-2xl font-semibold text-white mb-2">Join our community</h3>
-                <p className="text-gray-400">Connect on Discord or WhatsApp for updates and support.</p>
-              </div>
-              <div className="flex gap-3">
-                <a href="https://discord.com/invite/" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/15">Discord</a>
-                <a href="https://chat.whatsapp.com/" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/15">WhatsApp</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Newsletter */}
-        <section className="py-20 px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">Subscribe to our Newsletter</h2>
-            <p className="text-gray-400 mb-8">Get event announcements, learning resources, and community highlights in your inbox.</p>
-            <form className="flex flex-col sm:flex-row gap-3 justify-center">
-              <input type="email" required placeholder="you@example.com" className="w-full sm:w-auto min-w-[260px] px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-[#00d4ff]" />
-              <button type="submit" className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white font-semibold">Subscribe</button>
-            </form>
-          </div>
-        </section>
-
         <section id="events" className="py-20 px-4">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
@@ -667,9 +665,20 @@ const Home = () => {
             </div>
           </div>
         </section>
-
         
 
+        {/* Newsletter */}
+        <section className="py-20 px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">Subscribe to our Newsletter</h2>
+            <p className="text-gray-400 mb-8">Get event announcements, learning resources, and community highlights in your inbox.</p>
+            <form className="flex flex-col sm:flex-row gap-3 justify-center">
+              <input type="email" required placeholder="you@example.com" className="w-full sm:w-auto min-w-[260px] px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-[#00d4ff]" />
+              <button type="submit" className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white font-semibold">Subscribe</button>
+            </form>
+          </div>
+        </section>
+        
         <section id="contact" className="py-20 px-4">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
@@ -743,19 +752,98 @@ const Home = () => {
             </div>
           </div>
         </section>
+        
+        {/* === NEW FOOTER COMPONENT GOES HERE === */}
+        <Footer />
 
-        <footer className="py-12 px-4 text-center">
-          <div className="flex justify-center gap-8 mb-8">
-            <a href="#" className="text-2xl text-gray-400 hover:text-[#00d4ff] hover:-translate-y-1 transition-all duration-300">📧</a>
-            <a href="#" className="text-2xl text-gray-400 hover:text-[#00d4ff] hover:-translate-y-1 transition-all duration-300">💬</a>
-            <a href="#" className="text-2xl text-gray-400 hover:text-[#00d4ff] hover:-translate-y-1 transition-all duration-300">🔗</a>
-            <a href="#" className="text-2xl text-gray-400 hover:text-[#00d4ff] hover:-translate-y-1 transition-all duration-300">📸</a>
-          </div>
-          <p className="text-gray-500">&copy; 2025 Dev Catalyst. All rights reserved.</p>
-        </footer>
       </main>
     </>
   )
 }
+
+// === NEW FOOTER COMPONENT DEFINITION ===
+const Footer = () => {
+  return (
+    <footer className="bg-[#0f0f0f] border-t border-white/10 text-gray-400">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        {/* Top section: Logo, links grid */}
+        <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-12 gap-8 mb-12">
+          {/* Column 1 & 2: Logo and Address */}
+          <div className="col-span-2 md:col-span-6 lg:col-span-4">
+            <a href="#home" className="text-2xl font-bold bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent mb-4 inline-block">
+              DevCatalyst
+            </a>
+            <p className="text-sm mb-4">
+              <strong>Corporate & Communications Address:</strong><br />
+              Block A, Room 204, Your College,<br />
+              Hyderabad, Telangana, 500001
+            </p>
+            {/* Social Icons */}
+            <div className="flex gap-4 mt-6">
+              <a href="https://www.linkedin.com/company/devcatalystt" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/devcatalystt" target="_blank" rel="noreferrer" aria-label="Instagram" className="hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"/></svg>
+              </a>
+               <a href="https://x.com/dev_catalyst25" target="_blank" rel="noreferrer" aria-label="Twitter X" className="hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Column 3: Company */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-2">
+            <h4 className="font-semibold text-white mb-4">Company</h4>
+            <ul className="space-y-3 text-sm">
+              <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="/about#teams" className="hover:text-white transition-colors">Our Team</a></li>
+              <li><a href="/blog" className="hover:text-white transition-colors">Blog</a></li>
+              <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Explore */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-2">
+            <h4 className="font-semibold text-white mb-4">Explore</h4>
+            <ul className="space-y-3 text-sm">
+              <li><a href="/events" className="hover:text-white transition-colors">Events</a></li>
+              <li><a href="/workshops" className="hover:text-white transition-colors">Workshops</a></li>
+              <li><a href="/projects" className="hover:text-white transition-colors">Projects</a></li>
+              <li><a href="/hackathons" className="hover:text-white transition-colors">Hackathons</a></li>
+            </ul>
+          </div>
+
+          {/* Column 5: Resources */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-2">
+            <h4 className="font-semibold text-white mb-4">Resources</h4>
+            <ul className="space-y-3 text-sm">
+              <li><a href="/resources/roadmaps" className="hover:text-white transition-colors">Roadmaps</a></li>
+              <li><a href="/resources/guides" className="hover:text-white transition-colors">Guides</a></li>
+              <li><a href="/faq" className="hover:text-white transition-colors">FAQ</a></li>
+            </ul>
+          </div>
+          
+          {/* Column 6: Legal */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-2">
+            <h4 className="font-semibold text-white mb-4">Legal</h4>
+            <ul className="space-y-3 text-sm">
+              <li><a href="/legal/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/legal/terms" className="hover:text-white transition-colors">Terms of Service</a></li>
+              <li><a href="/legal/code-of-conduct" className="hover:text-white transition-colors">Code of Conduct</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom section: Copyright */}
+        <div className="border-t border-white/10 pt-8 text-center text-sm">
+          <p>&copy; 2025 Dev Catalyst. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
 
 export default Home
