@@ -12,8 +12,8 @@ type TeamData = {
 }
 
 const About = () => {
-  const [data, setData] = useState<TeamData | null>(null)
-  const [activeTeam, setActiveTeam] = useState<string | null>(null)
+  const [data, setData] = useState(null as TeamData | null)
+  const [openTeam, setOpenTeam] = useState(null as string | null)
 
   useEffect(() => {
     let cancelled = false
@@ -24,13 +24,13 @@ const About = () => {
     return () => { cancelled = true }
   }, [])
 
-  const toggleTeam = (name: string) => setActiveTeam(prev => (prev === name ? null : name))
+  const toggleTeam = (name: string) => setOpenTeam((prev: string | null) => prev === name ? null : name)
 
   return (
     <section id="about" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
-          About Dev Catalyst
+          About DevCatalyst
         </h2>
 
         {data && (
@@ -63,18 +63,9 @@ const About = () => {
         {data && (
           <>
             <div className="mt-16">
-              <h3 className="text-2xl md:text-3xl font-semibold text-white mb-6 text-center">Domains</h3>
-              <div className="flex flex-wrap gap-3 justify-center">
-                {data.domains.map((d, i) => (
-                  <span key={i} className="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-gray-300">{d}</span>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-16">
               <h3 className="text-2xl md:text-3xl font-semibold text-white mb-6 text-center">Leadership</h3>
               <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
-                {data.leadership.map((m, i) => (
+                {data.leadership.map((m: Leadership, i: number) => (
                   <div key={i} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center hover:-translate-y-2 transition-all">
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-xl font-bold text-white">{m.avatar || m.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
                     <div className="text-white font-semibold">{m.name}</div>
@@ -87,17 +78,17 @@ const About = () => {
             <div className="mt-16">
               <h3 className="text-2xl md:text-3xl font-semibold text-white mb-6 text-center">Teams</h3>
               <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {data.teams.map((t, i) => (
+                {data.teams.map((t: TeamGroup, i: number) => (
                   <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-6">
                     <button onClick={() => toggleTeam(t.name)} className="w-full text-left">
                       <div className="flex items-center justify-between">
                         <div className="text-white font-semibold">{t.name}</div>
-                        <div className="text-[#00d4ff] text-sm">{activeTeam === t.name ? 'Hide' : 'Show'}</div>
+                        <div className="text-[#00d4ff] text-sm">{openTeam === t.name ? 'Hide' : 'Show'}</div>
                       </div>
                     </button>
-                    {activeTeam === t.name && (
+                    {openTeam === t.name && (
                       <ul className="mt-4 space-y-3">
-                        {t.members.map((m, j) => (
+                        {t.members.map((m: TeamMember, j: number) => (
                           <li key={j} className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-[12px] font-bold text-white">
                               {(m.avatar || m.name.split(' ').map(w=>w[0]).slice(0,2).join(''))}
@@ -116,6 +107,7 @@ const About = () => {
       </div>
     </section>
   )
+  
 }
 
 export default About

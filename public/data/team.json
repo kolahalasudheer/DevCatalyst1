@@ -2,37 +2,77 @@
   "overview": "Dev Catalyst is a student-led developer community that helps students learn by building. We run workshops, hackathons, speaker sessions and mentorship programs across web, mobile, AI/ML and cloud.",
   "domains": ["Web Development", "Mobile Apps", "AI/ML", "Cloud", "Cybersecurity", "Blockchain", "IoT", "Game Development"],
   "leadership": [
-    { "name": "Divyansh Teja", "role": "President", "avatar": "DT" },
-    { "name": "Dhruv", "role": "Vice President", "avatar": "DG" },
-    { "name": "Raj Joshi", "role": "Event Head", "avatar": "RJ" },
-    { "name": "Maya Gupta", "role": "Technical Lead", "avatar": "MG" }
+    { "name": "Divyansh Teja Edla", "role": "President"},
+    { "name": "Dhruv Gannaram", "role": "Vice President"},
+    { "name": "Parimitha", "role": "Event Planner"},
+    { "name": "Hemaditya Kalakota", "role": "Technical Lead"}
   ],
   "teams": [
     {
-      "name": "Core Team",
-      "members": []
-    },
-    {
       "name": "Technical Team",
       "members": [
-        { "name": "Sudheer" },
-        { "name": "Siddartha" },
-        { "name": "Dhruv" },
-        { "name": "Pranav" },
-        { "name": "Bavana" },
-        { "name": "Hasini" },
-        { "name": "Hemaditya" },
-        { "name": "Sanjay" },
-        { "name": "Srikar" }
+        { "name": "Hemaditya Kalakota"},
+        { "name": "Sanjay Samala"},
+        { "name": "Sudheer Kumar"},
+        { "name": "Hema"},
+        { "name": "Siddhardha MNS"},
+        { "name": "Ajjarapu Pranav Sai Sreekanta"},
+        { "name": "Bavana Narvaneni"}
       ]
     },
     {
       "name": "Event Planning Team",
-      "members": []
+      "members": [
+        { "name": "Parimitha"},
+        { "name": "Siddhardha"},
+        { "name": "Ch.Bhuvana Sri"},
+        { "name": "Esha Satvase"},
+        { "name": "Vishnu Nimmakayala"},
+        { "name": "Hasini"},
+        { "name": "Sai Karthikeyan Koduri"},
+        { "name": "Ajjarapu Pranav Sai Sreekanta"},
+        { "name": "Raj Likhit Jasthi"},
+        { "name": "Srikar"},
+        { "name": "Supratik Peta"},
+        { "name": "Bavana Narvaneni"},
+        { "name": "Vinuthna Athimamula"},
+        { "name": "Akshara"},
+        { "name": "Hema"},
+        { "name": "Kranthi Kodati"}
+      ]
     },
     {
       "name": "Social Media Team",
-      "members": []
+      "members": [
+        { "name": "Ch.Bhuvana Sri"},
+        { "name": "Supratik Peta"},
+        { "name": "Vishnu Nimmakayala"},
+        { "name": "Akshara"},
+        { "name": "Kranthi Kodati"},
+        { "name": "P Ajay Kumar"}
+      ]
+    },
+    {
+      "name": "Outreach Team",
+      "members": [
+        { "name": "Hemaditya Kalakota"},
+        { "name": "Vinuthna Athimamula"},
+        { "name": "Sai Karthikeyan Koduri"},
+        { "name": "Hasini"},
+        { "name": "Esha Satvase"},
+        { "name": "Srikar"}
+      ]
+    },
+    {
+      "name": "Vision Makers",
+      "members": [
+        { "name": "P Ajay Kumar"},
+        { "name": "Sanjay Samala"},
+        { "name": "Sruthi"},
+        { "name": "Esha Satvase"},
+        { "name": "Mohammad Zaid"},
+        { "name": "Kattamreddy Sai"}
+      ]
     }
   ]
 }

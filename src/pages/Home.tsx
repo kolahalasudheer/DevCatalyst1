@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 
 type UpcomingEvent = { slug: string; title: string; date: string; time?: string }
@@ -65,29 +66,25 @@ const Home = () => {
     }
   ]
 
+  // Highlights carousel effect
   useEffect(() => {
-    // Set highlights data (in real app, fetch from API)
     setHighlights(sampleHighlights)
-
-    // Auto-slide highlights every 5 seconds
     const interval = setInterval(() => {
       setCurrentHighlight((prev: number) => (prev + 1) % sampleHighlights.length)
     }, 5000)
-
     return () => clearInterval(interval)
   }, [])
 
+  // Fetch events and set active event (run once)
   useEffect(() => {
     const parseStartTime = (time?: string): string | null => {
       if (!time) return null
       const match = time.match(/(\d{1,2}:\d{2}\s?(AM|PM))/i)
       return match ? match[1] : null
     }
-
     const toDate = (dateStr: string, timeStr?: string): Date => {
       const base = dateStr
       const startToken = parseStartTime(timeStr) || '09:00 AM'
-      // Ensure consistent parsing across browsers by constructing ISO-like string
       const [y, m, d] = base.split('-').map(Number)
       let [hhmm, ampm] = startToken.split(' ')
       let [hh, mm] = hhmm.split(':').map(Number)
@@ -96,7 +93,6 @@ const Home = () => {
       const dt = new Date(y, (m || 1) - 1, d || 1, hh || 0, mm || 0, 0)
       return dt
     }
-
     const pickNextEvent = (list: UpcomingEvent[]) => {
       const now = new Date()
       const upcoming = list
@@ -105,8 +101,6 @@ const Home = () => {
         .sort((a: { date: Date }, b: { date: Date }) => a.date.getTime() - b.date.getTime())
       return upcoming[0] || null
     }
-
-    // Fetch events once
     fetch('/data/events.json', { cache: 'no-store' })
       .then(r => r.ok ? r.json() : Promise.reject(new Error('Failed')))
       .then(json => {
@@ -118,7 +112,10 @@ const Home = () => {
       .catch(() => {
         // keep defaults if fetch fails
       })
-    // Animated counter for stats
+  }, [])
+
+  // Stats animation (run once)
+  useEffect(() => {
     const animateCounters = () => {
       const counters = Array.from(document.querySelectorAll<HTMLElement>('.stat-number'))
       const timers: number[] = []
@@ -139,8 +136,14 @@ const Home = () => {
       })
       return () => { timers.forEach(t => window.clearInterval(t)) }
     }
+    const cleanupCounters = animateCounters()
+    return () => {
+      cleanupCounters && cleanupCounters()
+    }
+  }, [])
 
-    // Code rain animation
+  // Code rain and constellation animation (run once)
+  useEffect(() => {
     const createCodeRain = () => {
       const hero = document.querySelector('.hero-background')
       if (!hero) return
@@ -161,30 +164,22 @@ const Home = () => {
       }
       return () => { created.forEach(el => el.remove()) }
     }
-
-    // Constellation canvas drawing
     const startConstellation = () => {
       const canvas = canvasRef.current
       const container = document.querySelector('.hero-background') as HTMLElement | null
       if (!canvas || !container) return () => {}
-
       const ctx = canvas.getContext('2d')!
-
       const resize = () => {
         canvas.width = container.clientWidth
         canvas.height = container.clientHeight
       }
       resize()
       window.addEventListener('resize', resize)
-
-      // Points roughly forming "D" and "C" shapes around center
       const w = () => canvas.width
       const h = () => canvas.height
       const cx = () => w() / 2
       const cy = () => h() / 2
-
       const basePoints = () => ([
-        // D arc
         { x: cx() - 180, y: cy() - 80 },
         { x: cx() - 180, y: cy() + 80 },
         { x: cx() - 140, y: cy() + 110 },
@@ -193,7 +188,6 @@ const Home = () => {
         { x: cx() - 60, y: cy() - 30 },
         { x: cx() - 80, y: cy() - 80 },
         { x: cx() - 140, y: cy() - 110 },
-        // C arc
         { x: cx() + 120, y: cy() - 100 },
         { x: cx() + 70, y: cy() - 120 },
         { x: cx() + 20, y: cy() - 90 },
@@ -203,14 +197,10 @@ const Home = () => {
         { x: cx() + 70, y: cy() + 120 },
         { x: cx() + 120, y: cy() + 100 },
       ])
-
       let animationId = 0
-
       const draw = (time: number) => {
         ctx.clearRect(0, 0, w(), h())
         const pts = basePoints()
-
-        // Slight shimmer
         for (let i = 0; i < pts.length; i++) {
           const p = pts[i]
           const twinkle = (Math.sin(time / 600 + i) + 1) / 2
@@ -222,8 +212,6 @@ const Home = () => {
           ctx.shadowBlur = 8
           ctx.fill()
         }
-
-        // Connect nearby points
         for (let i = 0; i < pts.length; i++) {
           for (let j = i + 1; j < pts.length; j++) {
             const dx = pts[i].x - pts[j].x
@@ -240,57 +228,41 @@ const Home = () => {
             }
           }
         }
-
-      animationId = requestAnimationFrame(draw)
+        animationId = requestAnimationFrame(draw)
       }
-
       animationId = requestAnimationFrame(draw)
-
       return () => {
         cancelAnimationFrame(animationId)
         window.removeEventListener('resize', resize)
         ctx.clearRect(0, 0, w(), h())
       }
     }
-
-    const cleanupCounters = animateCounters()
     const cleanupRain = createCodeRain()
     const stopConstellation = startConstellation()
-
-    let timer = 0
-    const startTick = () => {
-      if (!activeEvent?.date) return
-      if (timer) window.clearInterval(timer)
-      timer = window.setInterval(() => {
-        const nowMs = Date.now()
-        const targetMs = activeEvent.date.getTime()
-        const diff = Math.max(0, targetMs - nowMs)
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24))
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-        setTimeLeft({ days, hours, minutes, seconds })
-        if (diff === 0) {
-          // Move to next event automatically
-          const next = ((): { slug: string; title: string; date: Date } | null => {
-            const now = new Date()
-            const upcoming = events
-              .map((e: UpcomingEvent) => ({ slug: e.slug, title: e.title, date: toDate(e.date, e.time) }))
-              .filter((e: { date: Date }) => e.date.getTime() > now.getTime())
-              .sort((a: { date: Date }, b: { date: Date }) => a.date.getTime() - b.date.getTime())
-            return upcoming[0] || null
-          })()
-          setActiveEvent(next)
-        }
-      }, 1000)
-    }
-    startTick()
-
     return () => {
-      cleanupCounters && cleanupCounters()
       cleanupRain && cleanupRain()
       stopConstellation && stopConstellation()
-      if (timer) window.clearInterval(timer)
+    }
+  }, [])
+
+  // Countdown timer (depends on activeEvent)
+  useEffect(() => {
+    if (!activeEvent?.date) return
+    let timer = window.setInterval(() => {
+      const nowMs = Date.now()
+      const targetMs = activeEvent.date.getTime()
+      const diff = Math.max(0, targetMs - nowMs)
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000)
+      setTimeLeft({ days, hours, minutes, seconds })
+      if (diff === 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
+      }
+    }, 1000)
+    return () => {
+      window.clearInterval(timer)
     }
   }, [activeEvent])
 
@@ -336,7 +308,7 @@ const Home = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-10 md:gap-16 mb-10 animate-fadeInUp animation-delay-400">
               <div className="text-center">
-                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="500">0</div>
+                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="200">0</div>
                 <div className="text-gray-500">Members</div>
               </div>
               <div className="text-center">
@@ -386,48 +358,56 @@ const Home = () => {
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden">
                 {highlights.length > 0 && (
                   <div className="relative">
-                    {/* Main highlight content */}
-                    <div className="grid lg:grid-cols-2 gap-0">
-                      {/* Image section */}
-                      <div className="relative h-64 lg:h-80 overflow-hidden">
-                        <img 
-                          src={highlights[currentHighlight]?.image || '/placeholder.jpg'} 
-                          alt={highlights[currentHighlight]?.title}
-                          className="w-full h-full object-cover transition-all duration-700 transform hover:scale-105"
-                          loading="lazy"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getCategoryColor(highlights[currentHighlight]?.category)} text-white shadow-lg`}>
-                            <span>{getCategoryIcon(highlights[currentHighlight]?.category)}</span>
-                            {highlights[currentHighlight]?.category.toUpperCase()}
-                          </span>
+                    {/* Main highlight content with Framer Motion animation */}
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={highlights[currentHighlight]?.id}
+                        initial={{ x: 50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -50, opacity: 0 }}
+                        transition={{ duration: 0.5, ease: 'easeInOut' }}
+                        className="grid lg:grid-cols-2 gap-0"
+                      >
+                        {/* Image section */}
+                        <div className="relative h-64 lg:h-80 overflow-hidden">
+                          <img 
+                            src={highlights[currentHighlight]?.image || '/placeholder.jpg'} 
+                            alt={highlights[currentHighlight]?.title}
+                            className="w-full h-full object-cover transition-all duration-700 transform hover:scale-105"
+                            loading="lazy"
+                          />
+                          <div className="absolute top-4 left-4">
+                            <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getCategoryColor(highlights[currentHighlight]?.category)} text-white shadow-lg`}>
+                              <span>{getCategoryIcon(highlights[currentHighlight]?.category)}</span>
+                              {highlights[currentHighlight]?.category.toUpperCase()}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      
-                      {/* Content section */}
-                      <div className="p-8 lg:p-12 flex flex-col justify-center">
-                        <div className="text-[#00d4ff] text-sm font-semibold mb-2">
-                          {highlights[currentHighlight]?.date}
+                        {/* Content section */}
+                        <div className="p-8 lg:p-12 flex flex-col justify-center">
+                          <div className="text-[#00d4ff] text-sm font-semibold mb-2">
+                            {highlights[currentHighlight]?.date}
+                          </div>
+                          <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight">
+                            {highlights[currentHighlight]?.title}
+                          </h3>
+                          <p className="text-gray-300 leading-relaxed mb-6 text-base lg:text-lg">
+                            {highlights[currentHighlight]?.description}
+                          </p>
+                          {highlights[currentHighlight]?.link && (
+                            <a 
+                              href={highlights[currentHighlight]?.link}
+                              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white rounded-full font-semibold hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,212,255,0.3)] w-fit"
+                            >
+                              Learn More
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </a>
+                          )}
                         </div>
-                        <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4 leading-tight">
-                          {highlights[currentHighlight]?.title}
-                        </h3>
-                        <p className="text-gray-300 leading-relaxed mb-6 text-base lg:text-lg">
-                          {highlights[currentHighlight]?.description}
-                        </p>
-                        {highlights[currentHighlight]?.link && (
-                          <a 
-                            href={highlights[currentHighlight]?.link}
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white rounded-full font-semibold hover:-translate-y-1 transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,212,255,0.3)] w-fit"
-                          >
-                            Learn More
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </a>
-                        )}
-                      </div>
-                    </div>
+                      </motion.div>
+                    </AnimatePresence>
 
                     {/* Navigation arrows */}
                     <button
@@ -578,27 +558,62 @@ const Home = () => {
         </section>
 
         {/* Teams Preview */}
-        <section className="py-16 px-4">
+        <section id="team" className="py-20 px-4">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-10 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
-              Explore Our Teams
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">
+              Meet Our Team
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { name: 'Core Team', href: '/about#teams' },
-                { name: 'Technical Team', href: '/about#teams' },
-                { name: 'Event Planning Team', href: '/about#teams' },
-                { name: 'Social Media Team', href: '/about#teams' },
-              ].map((t, i) => (
-                <a key={i} href={t.href} className="block bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:-translate-y-2 transition-all">
-                  <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff]" />
-                  <div className="text-white font-semibold">{t.name}</div>
-                </a>
-              ))}
+            <div className="grid md:grid-cols-4 gap-8">
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-2xl font-bold text-white">
+                  D
+                </div>
+                <h3 className="text-white text-xl font-semibold mb-2">Divyansh Teja Edla</h3>
+                <p className="text-[#00d4ff] text-sm">President</p>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-2xl font-bold text-white">
+                  DG
+                </div>
+                <h3 className="text-white text-xl font-semibold mb-2">Dhruv Gannaram</h3>
+                <p className="text-[#00d4ff] text-sm">Vice President</p>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-2xl font-bold text-white">
+                  P
+                </div>
+                <h3 className="text-white text-xl font-semibold mb-2">Parimitha</h3>
+                <p className="text-[#00d4ff] text-sm">Event Planner</p>
+              </div>
+
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:border-[#00d4ff]/30">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] flex items-center justify-center text-2xl font-bold text-white">
+                  HK
+                </div>
+                <h3 className="text-white text-xl font-semibold mb-2">Hemaditya Kalakota</h3>
+                <p className="text-[#00d4ff] text-sm">Technical Lead</p>
+              </div>
             </div>
           </div>
         </section>
 
+        {/* Community CTA */}
+        <section className="py-12 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div>
+                <h3 className="text-2xl font-semibold text-white mb-2">Join our community</h3>
+                <p className="text-gray-400">Connect to us on our Socials.</p>
+              </div>
+              <div className="flex gap-3">
+                <a href="https://beacons.ai/devcatalyst" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/15">Join Social</a>
+              </div>
+            </div>
+          </div>
+        </section>
+        
         {/* Getting Started Steps */}
         <section className="py-16 px-4">
           <div className="max-w-7xl mx-auto">
@@ -667,7 +682,7 @@ const Home = () => {
         </section>
         
 
-        {/* Newsletter */}
+        {/* Newsletter
         <section className="py-20 px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-[#00d4ff] bg-clip-text text-transparent">Subscribe to our Newsletter</h2>
@@ -677,7 +692,7 @@ const Home = () => {
               <button type="submit" className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00d4ff] to-[#9c40ff] text-white font-semibold">Subscribe</button>
             </form>
           </div>
-        </section>
+        </section>*/}
         
         <section id="contact" className="py-20 px-4">
           <div className="max-w-3xl mx-auto">
@@ -734,7 +749,7 @@ const Home = () => {
               <div className="mt-8 grid md:grid-cols-3 gap-6 text-gray-300">
                 <div>
                   <h3 className="text-white font-semibold mb-2">Email</h3>
-                  <a href="mailto:club@example.com" className="text-[#00d4ff]">club@example.com</a>
+                  <a href="mailto:devcatalyst.2025@gmail.com" className="text-[#00d4ff]">devcatalyst.2025@gmail.com</a>
                 </div>
                 <div>
                   <h3 className="text-white font-semibold mb-2">Social</h3>
@@ -746,7 +761,7 @@ const Home = () => {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold mb-2">Location</h3>
-                  <p className="text-gray-400">Block A, Room 204, Your College</p>
+                  <a href="https://maps.app.goo.gl/DAw396N9adcF5dHu7" target="_blank" rel="noreferrer" className="hover:text-[#00d4ff]">Matrusri Engineering College</a>
                 </div>
               </div>
             </div>
@@ -774,9 +789,9 @@ const Footer = () => {
               DevCatalyst
             </a>
             <p className="text-sm mb-4">
-              <strong>Corporate & Communications Address:</strong><br />
-              Block A, Room 204, Your College,<br />
-              Hyderabad, Telangana, 500001
+              <strong>Communications Address:</strong><br />
+              Matrusri Engineering College<br />
+              Hyderabad, Telangana, 500059
             </p>
             {/* Social Icons */}
             <div className="flex gap-4 mt-6">
@@ -838,7 +853,7 @@ const Footer = () => {
 
         {/* Bottom section: Copyright */}
         <div className="border-t border-white/10 pt-8 text-center text-sm">
-          <p>&copy; 2025 Dev Catalyst. All rights reserved.</p>
+          <p>&copy; 2025 DevCatalyst. All rights reserved.</p>
         </div>
       </div>
     </footer>
