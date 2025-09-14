@@ -50,8 +50,7 @@ const Join = () => {
         </div>
 
         <div className="mt-12 flex flex-wrap gap-3">
-          <a href="https://discord.com/invite/" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/15">Join Discord</a>
-          <a href="https://chat.whatsapp.com/" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/15">Join WhatsApp</a>
+          <a href="https://beacons.ai/devcatalyst" target="_blank" rel="noreferrer" className="px-5 py-3 rounded-full bg-white/10 border border-white/10 text-white hover:bg-white/15">Join Social</a>
         </div>
       </div>
     </section>
