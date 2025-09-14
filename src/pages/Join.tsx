@@ -12,7 +12,7 @@ const Join = () => {
         </div>
 
         <div className="mb-12 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
-          <h2 className="text-2xl font-semibold text-white mb-4">Membership Perks</h2>
+          <h2 className="text-2xl font-semibold text-white mb-4">Joining Perks</h2>
           <ul className="text-gray-400 leading-relaxed list-disc pl-5 space-y-2">
             <li>Networking with peers, alumni, and industry mentors</li>
             <li>Hands-on learning via workshops, projects, and hackathons</li>

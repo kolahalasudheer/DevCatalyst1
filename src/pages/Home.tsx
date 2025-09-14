@@ -468,35 +468,6 @@ const Home = () => {
                 ))}
               </div>
             </div>
-
-            {/* Quick highlights grid */}
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {highlights.slice(0, 4).map((highlight: HighlightItem, index: number) => (
-                <div
-                  key={highlight.id}
-                  onClick={() => setCurrentHighlight(index)}
-                  className={`cursor-pointer bg-white/5 border border-white/10 rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#00d4ff]/30 ${
-                    index === currentHighlight ? 'ring-2 ring-[#00d4ff]/50 bg-white/10' : ''
-                  }`}
-                >
-                  <div className="aspect-video mb-3 rounded-lg overflow-hidden">
-                    <img 
-                      src={highlight.image} 
-                      alt={highlight.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs">{getCategoryIcon(highlight.category)}</span>
-                    <span className="text-[#00d4ff] text-xs font-semibold">{highlight.date}</span>
-                  </div>
-                  <h4 className="text-white font-semibold text-sm leading-tight line-clamp-2">
-                    {highlight.title}
-                  </h4>
-                </div>
-              ))}
-            </div>
           </div>
         </section>
 
