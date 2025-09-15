@@ -38,7 +38,7 @@ const Gallery = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {photos.map((p, idx) => (
+          {photos.map((p: Photo, idx: number) => (
             <button
               key={idx}
               className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10 bg-white/5"

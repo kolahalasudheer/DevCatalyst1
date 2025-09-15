@@ -308,7 +308,7 @@ const Home = () => {
             
             <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-10 md:gap-16 mb-10 animate-fadeInUp animation-delay-400">
               <div className="text-center">
-                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="200">0</div>
+                <div className="stat-number text-2xl sm:text-3xl font-bold text-[#00d4ff]" data-target="500">0</div>
                 <div className="text-gray-500">Members</div>
               </div>
               <div className="text-center">

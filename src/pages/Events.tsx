@@ -78,8 +78,8 @@ const fallbackData: EventsData = {
 }
 
 const Events = () => {
-  const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All')
-  const [data, setData] = useState<EventsData>(fallbackData)
+  const [activeCategory, setActiveCategory] = useState('All' as Category | 'All')
+  const [data, setData] = useState(fallbackData as EventsData)
 
   useEffect(() => {
     let cancelled = false

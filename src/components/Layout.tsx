@@ -1,7 +1,7 @@
-import { ReactNode } from 'react'
+import * as React from 'react'
 
 interface LayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {

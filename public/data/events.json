@@ -1,18 +1,18 @@
 {
   "upcoming": [
     {
-      "slug": "react-workshop-2025",
-      "title": "React.js Workshop",
-      "date": "2025-12-15",
-      "time": "09:00 AM - 1:00 PM",
-      "location": "KV Seminar Hall, Matrusri Engineering College, Hyderabad",
-      "description": "Learn the fundamentals of React.js and build your first interactive web application. Perfect for beginners!",
+      "slug": "Ai-Workshop-2025",
+      "title": "DynamicRAG -Agentic Ai Workshop",
+      "date": "2025-09-16",
+      "time": "10:00 AM - 1:00 PM",
+      "location": "T&P Cell(N-401), Matrusri Engineering College, Hyderabad",
+      "description": "Learn the fundamentals of Ai and build your first interactive web application. Perfect for beginners!",
       "cta": "Register",
       "image": "/events/web-workshop.svg",
       "category": "Workshops",
       "rules": [
         "Bring your laptop and charger",
-        "Install Node.js LTS beforehand",
+        "Install  TechStack beforehand",
         "Follow the code of conduct"
       ],
       "agenda": [
@@ -22,7 +22,7 @@
         { "time": "11:30 AM", "item": "Hands-on: Build a Todo App" },
         { "time": "12:45 PM", "item": "Q&A and Next Steps" }
       ],
-      "registrationUrl": "https://example.com/register/react-workshop"
+      "registrationUrl": "https://example.com/register/Ai-workshop"
     },
     {
       "slug": "winter-hackathon-2025",

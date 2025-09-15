@@ -32,11 +32,11 @@ type EventItem = {
 type EventsData = { upcoming: EventItem[]; past: EventItem[] }
 
 const EventDetail = () => {
-  const { slug = '' } = useParams<{ slug: string }>()
-  const [event, setEvent] = useState<EventItem | null>(null)
+  const { slug = '' } = useParams() as { slug?: string }
+  const [event, setEvent] = useState(null as EventItem | null)
   const [notFound, setNotFound] = useState(false)
-  const [all, setAll] = useState<EventItem[]>([])
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
+  const [all, setAll] = useState([] as EventItem[]);
+  const [lightboxSrc, setLightboxSrc] = useState(null as string | null)
   // No orientation boxes needed when using masonry layout
 
   const fetchData = async () => {
@@ -65,8 +65,8 @@ const EventDetail = () => {
 
   const related = useMemo(() => {
     if (!event) return [] as EventItem[]
-    const sameCategory = all.filter(e => e.slug !== event.slug && e.category === event.category)
-    const others = all.filter(e => e.slug !== event.slug && e.category !== event.category)
+  const sameCategory = all.filter((e: EventItem) => e.slug !== event.slug && e.category === event.category)
+  const others = all.filter((e: EventItem) => e.slug !== event.slug && e.category !== event.category)
     return [...sameCategory, ...others].slice(0, 3)
   }, [all, event])
 
@@ -119,7 +119,7 @@ const EventDetail = () => {
               <div className="mb-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Guests</h2>
                 <ul className="text-gray-300 space-y-1">
-                  {event.guests.map((g, i) => (
+                  {event.guests.map((g: { name: string; designation?: string }, i: number) => (
                     <li key={i}><span className="text-white">{g.name}</span>{g.designation ? ` — ${g.designation}` : ''}</li>
                   ))}
                 </ul>
@@ -130,7 +130,7 @@ const EventDetail = () => {
               <div className="mb-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Rules</h2>
                 <ul className="list-disc pl-5 text-gray-300 space-y-1">
-                  {event.rules.map((r, i) => <li key={i}>{r}</li>)}
+                  {event.rules.map((r: string, i: number) => <li key={i}>{r}</li>)}
                 </ul>
               </div>
             )}
@@ -139,7 +139,7 @@ const EventDetail = () => {
               <div className="mb-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Agenda</h2>
                 <ul className="text-gray-300 space-y-1">
-                  {event.agenda.map((a, i) => (
+                  {event.agenda.map((a: { time: string; item: string }, i: number) => (
                     <li key={i} className="flex gap-3"><span className="text-gray-400 w-28">{a.time}</span><span>{a.item}</span></li>
                   ))}
                 </ul>
@@ -150,7 +150,7 @@ const EventDetail = () => {
               <div className="mb-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Highlights</h2>
                 <ul className="list-disc pl-5 text-gray-300 space-y-1">
-                  {event.highlights.map((h, i) => <li key={i}>{h}</li>)}
+                  {event.highlights.map((h: string, i: number) => <li key={i}>{h}</li>)}
                 </ul>
               </div>
             )}
@@ -159,7 +159,7 @@ const EventDetail = () => {
               <div className="mt-8">
                 <h2 className="text-white text-xl font-semibold mb-3">Photos</h2>
                 <div className="columns-1 sm:columns-2 md:columns-3 gap-4 [column-gap:1rem]">
-                  {event.photos.map((p, i) => (
+                  {event.photos.map((p: string, i: number) => (
                     <div key={i} className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-white/10 bg-black/20">
                       <img
                         src={(p.startsWith('http://') || p.startsWith('https://')) ? p : encodeURI(p)}
@@ -183,7 +183,7 @@ const EventDetail = () => {
               <div className="mt-8">
                 <h2 className="text-white text-xl font-semibold mb-2">Organizers</h2>
                 <div className="flex flex-wrap gap-2">
-                  {event.organizers.map((o, i) => (
+                  {event.organizers.map((o: string, i: number) => (
                     <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300">{o}</span>
                   ))}
                 </div>
@@ -194,7 +194,7 @@ const EventDetail = () => {
               <div className="mt-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Sponsors</h2>
                 <div className="flex flex-wrap gap-2">
-                  {event.sponsors.map((s, i) => (
+                  {event.sponsors.map((s: string, i: number) => (
                     <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300">{s}</span>
                   ))}
                 </div>
@@ -205,7 +205,7 @@ const EventDetail = () => {
               <div className="mt-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Outcomes</h2>
                 <ul className="list-disc pl-5 text-gray-300 space-y-1">
-                  {event.outcomes.map((o, i) => <li key={i}>{o}</li>)}
+                  {event.outcomes.map((o: string, i: number) => <li key={i}>{o}</li>)}
                 </ul>
               </div>
             )}
@@ -214,7 +214,7 @@ const EventDetail = () => {
               <div className="mt-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Resources</h2>
                 <ul className="text-gray-300 space-y-1">
-                  {event.resources.map((r, i) => (
+                  {event.resources.map((r: { label: string; url: string }, i: number) => (
                     <li key={i}><a className="text-[#00d4ff] hover:underline" href={r.url} target="_blank" rel="noreferrer">{r.label}</a></li>
                   ))}
                 </ul>
@@ -225,7 +225,7 @@ const EventDetail = () => {
               <div className="mt-6">
                 <h2 className="text-white text-xl font-semibold mb-2">Hashtags</h2>
                 <div className="flex flex-wrap gap-2">
-                  {event.hashtags.map((h, i) => (
+                  {event.hashtags.map((h: string, i: number) => (
                     <span key={i} className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300">{h}</span>
                   ))}
                 </div>
@@ -247,7 +247,7 @@ const EventDetail = () => {
           <div className="mt-12">
             <h2 className="text-2xl md:text-3xl font-semibold text-white mb-6">Related Events</h2>
             <div className="grid md:grid-cols-3 gap-6">
-              {related.map(e => (
+              {related.map((e: EventItem) => (
                 <Link key={e.slug} to={`/events/${e.slug}`} className="block bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
                   <div className="h-28 w-full bg-center bg-cover" style={{ backgroundImage: e.image ? `url("${e.image}")` : undefined }} />
                   <div className="p-4">
